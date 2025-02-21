@@ -1,10 +1,15 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
+import { AppsFlyerSmartBanner } from "@/components/AppsFlyerSmartBanner";
+
+const webKey = 'ae481a13-98ec-4c8a-9ae0-39a6253cd6f';
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        <AppsFlyerSmartBanner webKey={webKey} />
         <Image
           className={styles.logo}
           src="/next.svg"
