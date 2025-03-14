@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { AppsFlyerSmartBanner } from "@/components/AppsFlyerSmartBanner";
 
-const webKey = 'ae481a13-98ec-4c8a-9ae0-39a6253cd6f';
+const webKey = '4130f0ba-1279-4b45-88f1-0be11744dfac';
 
 export default function Home() {
   return (
