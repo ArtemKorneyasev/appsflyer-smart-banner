@@ -39,7 +39,7 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
      * MDN советует при определении Safari дополнительно проверять не Chrome ли это.
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#browser_name_and_version
      */
-    const isSafariAndNotChromeRegex = /^((?!chrome|android).)*safari/i;
+    const isChromeAndNotSafariRegex = /(?:CriOS\/|Chrome\/(?!.*(?:Edg|Edge|OPR|Opera|SamsungBrowser)))(?!^(?!.*Chrome).*Safari)/;
 
     const scriptId = `appsflyer-script-${webKey}`;
 
@@ -61,7 +61,7 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
      * Мы не хотим показывать баннер AppsFlyer на Safari, т.к. там будет отображаться нативный баннер.
      * https://onetwotripdev.atlassian.net/browse/REF-18
      */
-    if (!isSafariAndNotChromeRegex.test(window.navigator.userAgent)) {
+    if (isChromeAndNotSafariRegex.test(window.navigator.userAgent)) {
       script.innerHTML += `AF('banners', 'showBanner');`;
     }
 
