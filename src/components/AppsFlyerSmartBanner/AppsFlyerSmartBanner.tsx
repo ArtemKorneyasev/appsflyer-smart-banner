@@ -40,7 +40,6 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#browser_name_and_version
      */
     const isSafariAndNotChromeRegex = /^((?!chrome|android).)*safari/i;
-    console.log('isSafariAndNotChromeRegex:', isSafariAndNotChromeRegex.test(window.navigator.userAgent));
 
     const scriptId = `appsflyer-script-${webKey}`;
 
