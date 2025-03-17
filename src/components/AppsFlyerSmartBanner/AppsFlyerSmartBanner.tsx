@@ -67,7 +67,7 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
 
     // Обработка ошибок, если что-то пойдет не так при вставке скрипта
     try {
-      document.body.appendChild(script);
+      document.head.appendChild(script);
     } catch (error) {
       console.error('Failed to append AppsFlyer script:', error);
     }
