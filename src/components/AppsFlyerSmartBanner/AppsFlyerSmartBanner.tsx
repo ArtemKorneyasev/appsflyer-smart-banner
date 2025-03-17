@@ -1,13 +1,5 @@
 import { useEffect } from 'react';
 
-// const getScript = ({ scriptId, webKey }: { scriptId: string; webKey: string; }) => `
-//   !function(t,e,n,s,a,c,i,o,p){t.AppsFlyerSdkObject=a,t.AF=t.AF||function(){
-//   (t.AF.q=t.AF.q||[]).push([Date.now()].concat(Array.prototype.slice.call(arguments)))},
-//   t.AF.id=t.AF.id||i,t.AF.plugins={},o=e.createElement(n),p=e.getElementsByTagName(n)[0],o.async=1,o.id="${scriptId}",
-//   o.src="https://websdk.appsflyer.com?"+(c.length>0?"st="+c.split(",").sort().join(",")+"&":"")+(i.length>0?"af_id="+i:""),
-//   p.parentNode.insertBefore(o,p)}(window,document,"script",0,"AF","banners",{banners: {key: "${webKey}"}});
-// `;
-
 const getScript = ({ scriptId, webKey }: { scriptId: string; webKey: string; }) => `
   !function(t,e,n,s,a,c,i,o,p){t.AppsFlyerSdkObject=a,t.AF=t.AF||function(){
   (t.AF.q=t.AF.q||[]).push([Date.now()].concat(Array.prototype.slice.call(arguments)))},
@@ -32,6 +24,10 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
   const { webKey }: AppsFlyerSmartBannerProps = props;
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
     if (!webKey) {
       // eslint-disable-next-line no-console
       console.warn('Missing required webKey for AppsFlyer script. Script appending aborted.');
@@ -43,7 +39,8 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
      * MDN советует при определении Safari дополнительно проверять не Chrome ли это.
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#browser_name_and_version
      */
-    const isSafariAndNotChromeRegex = /^(?!.*Chrome).*Safari.*/;
+    const isSafariAndNotChromeRegex = /^((?!chrome|android).)*safari/i;
+    console.log('isSafariAndNotChromeRegex:', isSafariAndNotChromeRegex.test(window.navigator.userAgent));
 
     const scriptId = `appsflyer-script-${webKey}`;
 
@@ -69,7 +66,20 @@ export const AppsFlyerSmartBanner = (props: AppsFlyerSmartBannerProps) => {
       script.innerHTML += `AF('banners', 'showBanner');`;
     }
 
-    document.body.appendChild(script);
+    // Обработка ошибок, если что-то пойдет не так при вставке скрипта
+    try {
+      document.body.appendChild(script);
+    } catch (error) {
+      console.error('Failed to append AppsFlyer script:', error);
+    }
+
+    // Если компонент будет размонтирован, удаляем добавленный скрипт, чтобы избежать утечек памяти
+    return () => {
+      const scriptElement = document.getElementById(scriptId);
+      if (scriptElement) {
+        scriptElement.remove();
+      }
+    };
   }, [webKey]);
 
   return null;
